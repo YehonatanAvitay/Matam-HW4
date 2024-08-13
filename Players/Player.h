@@ -2,10 +2,25 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <memory>
+#include "Job.h"
+#include "Character.h"
+#include <map>
 
 using std::string;
+using std::unique_ptr;
 
 class Player {
+    string name;
+    unsigned int level;
+    unsigned int force;
+    unsigned int coins;
+    unsigned int currentHealthPoints;
+    unsigned int maxHealthPoints;
+    bool isAlive;
+    unique_ptr<Job> job;
+    unique_ptr<Character> character;
 public:
     /**
      * Gets the description of the player
@@ -48,4 +63,14 @@ public:
      * @return - coins of the player
     */
     int getCoins() const;
+
+    int getMaxHealthPoints() const;
+
+    void setLevel(unsigned int);
+
+    void setHealthPoints(unsigned int);
+
+    void setCoins(unsigned int);
+
+    bool operator<(Player&) const;
 };

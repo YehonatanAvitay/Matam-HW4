@@ -85,6 +85,13 @@ void Player::setCoins(unsigned int num) {
     coins = num;
 }
 
+void Player::setForce(int num) {
+    if (num < 0) {
+        num = 0;
+    }
+    force = num;
+}
+
 bool Player::operator<(Player& player) const {
     if (this->level > player.level) {
        return true;
@@ -112,4 +119,8 @@ bool Player::isMagical() const {
 
 bool Player::isCloseFighter() const {
     return job->isItCloseFighter();
+}
+
+void Player::buy() {
+    character->buy(*this);
 }

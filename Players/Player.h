@@ -72,11 +72,15 @@ public:
 
     void setCoins(unsigned int);
 
+    void setForce(int);
+
     unsigned int getCombat() const;
 
     bool isMagical() const;
 
     bool isCloseFighter() const;
+
+    void buy();
 
     bool operator<(Player&) const;
 };

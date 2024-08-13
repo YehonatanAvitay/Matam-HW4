@@ -16,8 +16,8 @@ void Encounter::play(Player& player) {
 }
 
 string Encounter::getDescription() const {
-   string description = name + " ( power " + std::to_string(combatPower) + ", loot " +
-           std::to_string(loot) + ", damage " + std::to_string(damage) + ")";
+   string description = name + " ( power " + std::to_string(getCombat()) + ", loot " +
+           std::to_string(getLoot()) + ", damage " + std::to_string(getDamage()) + ")";
     return description;
 }
 

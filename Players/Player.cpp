@@ -1,6 +1,9 @@
 #include "Player.h"
-#include <iostream>
-using std::cout, std::endl;
+
+Player::Player(string name, unique_ptr<Job> job, unique_ptr<Character> character):name(name),
+job(std::move(job)), character(std::move(character)) {
+
+}
 
 /**
     * Gets the description of the player
@@ -8,9 +11,9 @@ using std::cout, std::endl;
     * @return - description of the player
    */
 string Player::getDescription() const {
-    string description = name + ", " + job->getJobString() + " with " +
-            character->getCharacterString() + " " + character->getCharacterString() + " (level "
-            + std::to_string(level) + ", force " + std::to_string(force) + ")";
+    string description = name + ", " + job->getName() + " with " +
+            character->getName() + " character (level " + std::to_string(level)
+            + ", force " + std::to_string(force) + ")";
     return description;
 }
 
@@ -67,7 +70,11 @@ void Player::setLevel(unsigned int num) {
     level = num;
 }
 
-void Player::setHealthPoints(unsigned int num) {
+void Player::setHealthPoints(int num) {
+    if (num <= 0) {
+        num = 0;
+        isAlive = false;
+    }
     if (num > maxHealthPoints) {
         num = maxHealthPoints;
     }
@@ -93,4 +100,16 @@ bool Player::operator<(Player& player) const {
         }
     }
     return false;
+}
+
+unsigned int Player::getCombat() const {
+    return job->getCombat(this->force, this->level);
+}
+
+bool Player::isMagical() const {
+    return job->isItMagical();
+}
+
+bool Player::isCloseFighter() const {
+    return job->isItCloseFighter();
 }

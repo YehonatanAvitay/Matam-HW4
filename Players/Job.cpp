@@ -1,6 +1,9 @@
 #include "Job.h"
 #include "Player.h"
 
+string Job::getName() const {
+    return name;
+}
 unsigned int Job::getLevel() const {
     return level;
 }
@@ -13,18 +16,15 @@ unsigned int Job::getMaxHealthPoints() const {
 unsigned int Job::getCoins() const {
     return coins;
 }
-unsigned int Job::getCombat(Player& player) const {
-    return player.getForce() + player.getLevel();
+bool Job::isItMagical() const {
+    return this->isMagical;
 }
-unsigned int Warrior::getCombat(Player &player) const {
-    return player.getForce() * 2 + player.getLevel();
+bool Job::isItCloseFighter() const {
+    return this->isCloseFighter;
 }
-string Warrior::getJobString() const {
-    return "Warrior";
+unsigned int Job::getCombat(unsigned int force, unsigned int level) const {
+    return force + level;
 }
-string Magician::getJobString() const {
-    return "Magician";
-}
-string Archer::getJobString() const {
-    return "Archer";
+unsigned int Warrior::getCombat(unsigned int force, unsigned int level) const {
+    return force * 2 + level;
 }

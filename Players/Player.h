@@ -6,12 +6,12 @@
 #include <memory>
 #include "Job.h"
 #include "Character.h"
-#include <map>
 
 using std::string;
 using std::unique_ptr;
 
 class Player {
+    Player(string name, unique_ptr<Job> job, unique_ptr<Character> character);
     string name;
     unsigned int level;
     unsigned int force;
@@ -68,9 +68,15 @@ public:
 
     void setLevel(unsigned int);
 
-    void setHealthPoints(unsigned int);
+    void setHealthPoints(int);
 
     void setCoins(unsigned int);
+
+    unsigned int getCombat() const;
+
+    bool isMagical() const;
+
+    bool isCloseFighter() const;
 
     bool operator<(Player&) const;
 };

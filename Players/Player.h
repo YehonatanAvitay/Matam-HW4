@@ -11,17 +11,17 @@ using std::string;
 using std::unique_ptr;
 
 class Player {
-    Player(string name, unique_ptr<Job> job, unique_ptr<Character> character);
     string name;
     unsigned int level;
     unsigned int force;
     unsigned int coins;
-    unsigned int currentHealthPoints;
     unsigned int maxHealthPoints;
+    unsigned int currentHealthPoints;
     bool isAlive;
     unique_ptr<Job> job;
     unique_ptr<Character> character;
 public:
+    Player(string name, unique_ptr<Job> job, unique_ptr<Character> character);
     /**
      * Gets the description of the player
      *

@@ -1,8 +1,10 @@
 #include "Player.h"
 
-Player::Player(string name, unique_ptr<Job> job, unique_ptr<Character> character):name(name),
-job(std::move(job)), character(std::move(character)) {
-
+Player::Player(string name, unique_ptr<Job> job, unique_ptr<Character> character) :
+                name(std::move(name)), level(job->getLevel()), force(job->getForce()),
+                coins(job->getCoins()), maxHealthPoints(job->getMaxHealthPoints()),
+                currentHealthPoints(maxHealthPoints), job(std::move(job)),
+                character(std::move(character)) {
 }
 
 /**

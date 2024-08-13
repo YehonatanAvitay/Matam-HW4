@@ -14,6 +14,7 @@ public:
     virtual unsigned int getLoot() const;
     virtual unsigned int getDamage() const;
     virtual void play(Player&) override;
+    void fight(Player&, const Job&);
     virtual void updateCombat();
     virtual ~Encounter() = default;
 };
@@ -43,12 +44,12 @@ public:
 
 class Pack : public Encounter {
     string name = "Pack";
-vector<unique_ptr<Encounter>> members;
+    vector<unique_ptr<Encounter>> members;
+    static unsigned int get(unsigned int (*getter)(const Encounter&),
+                     const vector<unique_ptr<Encounter>>& members);
 public:
     void updateCombat() override;
     unsigned int getCombat() const override;
     unsigned int getLoot() const override;
     unsigned int getDamage() const override;
 };
-
-unsigned int get(unsigned int (*getter)(const Encounter&));

@@ -47,15 +47,6 @@ int Player::getForce() const {
 }
 
 /**
- * Gets the amount of health points the player currently has
- *
- * @return - health points of the player
-*/
-int Player::getHealthPoints() const {
-    return currentHealthPoints;
-}
-
-/**
  * Gets the amount of coins the player has
  *
  * @return - coins of the player
@@ -68,8 +59,36 @@ int Player::getMaxHealthPoints() const {
     return maxHealthPoints;
 }
 
+/**
+ * Gets the amount of health points the player currently has
+ *
+ * @return - health points of the player
+*/
+int Player::getHealthPoints() const {
+    return currentHealthPoints;
+}
+
+const Job& Player::getJob() const {
+    return *job;
+}
+
+const Character& Player::getCharacter() const {
+    return *character;
+}
+
 void Player::setLevel(unsigned int num) {
     level = num;
+}
+
+void Player::setForce(int num) {
+    if (num < 0) {
+        num = 0;
+    }
+    force = num;
+}
+
+void Player::setCoins(unsigned int num) {
+    coins = num;
 }
 
 void Player::setHealthPoints(int num) {
@@ -81,17 +100,6 @@ void Player::setHealthPoints(int num) {
         num = maxHealthPoints;
     }
     currentHealthPoints = num;
-}
-
-void Player::setCoins(unsigned int num) {
-    coins = num;
-}
-
-void Player::setForce(int num) {
-    if (num < 0) {
-        num = 0;
-    }
-    force = num;
 }
 
 bool Player::operator<(Player& player) const {
@@ -109,20 +117,4 @@ bool Player::operator<(Player& player) const {
         }
     }
     return false;
-}
-
-unsigned int Player::getCombat() const {
-    return job->getCombat(this->force, this->level);
-}
-
-bool Player::isMagical() const {
-    return job->isItMagical();
-}
-
-bool Player::isCloseFighter() const {
-    return job->isItCloseFighter();
-}
-
-void Player::buy() {
-    character->buy(*this);
 }

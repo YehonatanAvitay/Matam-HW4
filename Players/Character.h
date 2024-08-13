@@ -7,11 +7,11 @@ class Player;
 
 class Character {
     string name;
+
 public:
     string getName() const;
     virtual void buy(Player&) const = 0;
     virtual ~Character() = default;
-
 };
 
 class RiskTaking : public Character {

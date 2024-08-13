@@ -3,7 +3,6 @@
 #include <string>
 using std::string;
 
-
 class Player;
 
 class Job {

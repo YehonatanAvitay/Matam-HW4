@@ -5,7 +5,7 @@ string SpecialEvent::getDescription() const {
 }
 
 void SolarEclipse::play(Player & player) {
-    if(player.isMagical()) {
+    if(player.getJob().isItMagical()) {
         player.setLevel(player.getLevel() + 1);
     }
     else {
@@ -14,5 +14,5 @@ void SolarEclipse::play(Player & player) {
 }
 
 void PotionsMerchant::play(Player & player) {
-    player.buy();
+    player.getCharacter().buy(player);
 }

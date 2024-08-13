@@ -14,4 +14,5 @@ public:
     string getName() const;
     virtual string getDescription() const = 0;
     virtual void play(Player&) = 0;
+    virtual ~Event() = default;
 };

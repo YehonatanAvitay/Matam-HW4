@@ -25,7 +25,6 @@ public:
     bool isItCloseFighter() const;
     virtual unsigned int getCombat(unsigned int force, unsigned int level) const = 0;
     virtual ~Job() = default;
-    virtual string getJobString() const = 0;
 };
 
 class Warrior : public Job {

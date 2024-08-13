@@ -6,6 +6,7 @@ class SpecialEvent : public Event {
 public:
     string getDescription() const override;
     void play(Player &) override = 0;
+    virtual ~SpecialEvent() = default;
 };
 
 class SolarEclipse : public SpecialEvent {

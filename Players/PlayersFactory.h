@@ -14,6 +14,9 @@ class PlayersFactory {
     class CharacterFactory;
 public:
     std::vector<std::unique_ptr<Player>> readPlayers(std::istream& input);
+    std::unique_ptr<Player> createPlayer(std::istringstream& lineStream);
+
+
 };
 
 class PlayersFactory::JobFactory {
@@ -25,7 +28,17 @@ public:
 };
 
 class PlayersFactory::CharacterFactory {
+    // Map to store character creation functions
+    std::map<std::string, std::unique_ptr<Character>(*)()> characterCreators;
+
 public:
-    unique_ptr<RiskTaking> createRiskTaking();
-    unique_ptr<Responsible> createResponsible();
+    CharacterFactory() {
+        characterCreators["RiskTaking"] = &createRiskTaking;
+        characterCreators["Responsible"] = &createResponsible;
+    }
+
+    // Function prototypes for character creation
+    std::unique_ptr<Character> createRiskTaking();
+    std::unique_ptr<Character> createResponsible();
+    ;
 };

@@ -1,31 +1,37 @@
 
 #include "MatamStory.h"
-
+#include "PlayersFactory.h"
+#include "EventFactory.h"
 #include "Utilities.h"
 
 MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) {
-    /*===== TODO: Open and read events file =====*/
+    // Open and read events file
+    EventFactory eventsFactory;
 
-    /*==========================================*/
+    //Initiate events vector
+    events = eventsFactory.createEventList(eventsStream);
 
+    // Open and read players file
+    PlayersFactory playersFactory;
 
-    /*===== TODO: Open and Read players file =====*/
-
-    /*============================================*/
+    // Initiate players vector
+    players = playersFactory.readPlayers(playersStream);
 
 
     this->m_turnIndex = 1;
+
 }
 
 void MatamStory::playTurn(Player& player) {
 
-    /**
-     * Steps to implement (there may be more, depending on your design):
-     * 1. Get the next event from the events list
-     * 2. Print the turn details with "printTurnDetails"
-     * 3. Play the event
-     * 4. Print the turn outcome with "printTurnOutcome"
-    */
+    // Get the next event from the events list
+    Event* event = getNextEvent();
+
+    // Print the turn details with "printTurnDetails"
+    printTurnDetails(m_turnIndex, player, *event);
+
+    // Print the turn details with "printTurnDetails"
+    event->play(player); //Play the event
 
     m_turnIndex++;
 }
@@ -34,17 +40,20 @@ void MatamStory::playRound() {
 
     printRoundStart();
 
-    /*===== TODO: Play a turn for each player =====*/
-
-    /*=============================================*/
+    // Play a turn for each player
+    for (unique_ptr<Player>& x: players) {
+        playTurn(*x);
+    }
 
     printRoundEnd();
 
     printLeaderBoardMessage();
 
-    /*===== TODO: Print leaderboard entry for each player using "printLeaderBoardEntry" =====*/
-
-    /*=======================================================================================*/
+    // Print leaderboard entry for each player
+    int i = 1;
+    for (unique_ptr<Player>& x: players) {
+        printLeaderBoardEntry(i++,*x);
+    }
 
     printBarrier();
 }
@@ -70,4 +79,17 @@ void MatamStory::play() {
     /*===== TODO: Print either a "winner" message or "no winner" message =====*/
 
     /*========================================================================*/
+}
+
+ Event* MatamStory::getNextEvent() {
+
+    static auto iterator = events.begin();
+
+    if(++iterator == events.end()) {
+        iterator = events.begin();
+    }
+    Event* eventPtr = (*iterator).get();  // get the raw pointer to nextEvent
+
+    return eventPtr;
+
 }

@@ -8,6 +8,7 @@ class Encounter : public Event {
     unsigned int combatPower;
     unsigned int loot;
     unsigned int damage;
+    bool isEncounter = true;
 protected:
     Encounter() = default;
 public:
@@ -50,6 +51,7 @@ class Pack : public Encounter {
     static unsigned int get(unsigned int (*getter)(const Encounter&),
                      const vector<unique_ptr<Encounter>>& members);
 public:
+    void setMembers(vector<unique_ptr<Encounter>>);
     void updateCombat() override;
     unsigned int getCombat() const override;
     unsigned int getLoot() const override;

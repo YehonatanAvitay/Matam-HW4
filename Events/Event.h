@@ -5,6 +5,7 @@
 
 class Event {
     string name;
+    bool isEncounter = false;
 public:
     /**
      * Gets the description of the event

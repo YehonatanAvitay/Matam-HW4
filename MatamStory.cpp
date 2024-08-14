@@ -4,7 +4,6 @@
 #include "Utilities.h"
 
 MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) {
-
     /*===== TODO: Open and read events file =====*/
 
     /*==========================================*/

@@ -5,7 +5,7 @@ class SpecialEvent : public Event {
     string name;
 public:
     string getDescription() const override;
-    void play(Player &) override = 0;
+    virtual void play(Player &) override = 0;
     virtual ~SpecialEvent() = default;
 };
 

@@ -1,4 +1,5 @@
 #include "Encounter.h"
+#include <numeric>
 
 string Encounter::getDescription() const {
     string description = name + " ( power " + std::to_string(getCombat()) + ", loot " +
@@ -61,6 +62,7 @@ unsigned int Pack::get(unsigned int (*getter)(const Encounter&),
 }
 
 unsigned int Pack::getCombat() const {
+    // std::accumulate
     return get([](const Encounter& encounter) { return encounter.getCombat(); },
                members);
 }

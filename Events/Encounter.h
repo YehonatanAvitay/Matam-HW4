@@ -8,9 +8,11 @@ class Encounter : public Event {
     unsigned int combatPower;
     unsigned int loot;
     unsigned int damage;
+protected:
+    Encounter() = default;
 public:
     string getDescription() const override;
-    virtual unsigned int getCombat() const = 0;
+    virtual unsigned int getCombat() const;
     virtual unsigned int getLoot() const;
     virtual unsigned int getDamage() const;
     virtual void play(Player&) override;

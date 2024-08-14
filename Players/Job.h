@@ -14,6 +14,8 @@ class Job {
     const bool isMagical = false;
     const bool isCloseFighter = false;
     ;
+protected:
+    Job() = default;
 public:
     string getName() const;
     unsigned int getLevel() const;
@@ -22,7 +24,7 @@ public:
     unsigned int getCoins() const;
     bool isItMagical() const;
     bool isItCloseFighter() const;
-    virtual unsigned int getCombat(unsigned int force, unsigned int level) const = 0;
+    virtual unsigned int getCombat(unsigned int force, unsigned int level) const;
     virtual ~Job() = default;
 };
 

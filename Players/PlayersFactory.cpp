@@ -1,19 +1,23 @@
 #include "PlayersFactory.h"
-
+#include <unordered_map>
+#include "../Events/Event.h"
+#include "../Events/Encounter.h"
+#include "../Events/SpecialEvent.h"
 
 std::vector<std::unique_ptr<Player>> PlayersFactory::readPlayers(std::istream& input) {
     std::vector<std::unique_ptr<Player>> players;
     string line;
 
     while (std::getline(input, line)) {
-        std::istringstream iss(line);
+        std::istringstream lineStream(line);
         string name, jobName, characterName;
 
-        if (!(iss >> name >> jobName >> characterName)) {
+        if (!(lineStream >> name >> jobName >> characterName)) {
             throw std::runtime_error("Invalid player file");
         }
 
         JobFactory jobFactory;
+        CharacterFactory characterFactory;
 
         // Create Job object based on the input
         std::unique_ptr<Job> job;
@@ -30,9 +34,9 @@ std::vector<std::unique_ptr<Player>> PlayersFactory::readPlayers(std::istream& i
         // Create Character object based on the input
         std::unique_ptr<Character> character;
         if (characterName == "RiskTaking") {
-            character = std::make_unique<RiskTaking>();
+            character = characterFactory.createRiskTaking();
         } else if (characterName == "Responsible") {
-            character = std::make_unique<Responsible>();
+            character = characterFactory.createResponsible();
         } else {
             throw std::runtime_error("Invalid player file");
         }
@@ -43,7 +47,6 @@ std::vector<std::unique_ptr<Player>> PlayersFactory::readPlayers(std::istream& i
 
     return players;
 }
-
 
 unique_ptr<Warrior> PlayersFactory::JobFactory::createWarrior() {
     return std::make_unique<Warrior>();

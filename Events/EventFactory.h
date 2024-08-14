@@ -11,12 +11,23 @@
 #include <functional>
 
 class EventFactory {
-    static std::unordered_map<string,std::function<unique_ptr<Event>(std::istream&)>>
+
+    // Methods and fields to create events:
+    static std::unordered_map<std::string, std::function<std::unique_ptr<Event>(std::istream&)>>
     eventsFactoriesMap;
-    static bool isInteger(const string&);
+    static std::unordered_map<std::string, std::function<std::unique_ptr<Event>
+    (std::istream&)>>::iterator findEvent(const string& eventName);
     static unique_ptr<Event> createEvent(const string& eventName, std::istream& eventFile);
 
-public:
+    // Methods and fields to create Encounters (to be used while constructing Pack members):
+    static std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::istream&)>>
+            encountersFactoriesMap;
+    static std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>
+            (std::istream&)>>::iterator findEncounter(const string& eventName);
+    static unique_ptr<Encounter> createEncounter(const string& eventName, std::istream& eventFile);
     static unique_ptr<Pack> createPack(std::istream&);
-    vector<unique_ptr<Event>> createEventList(std::istream&);
+    static bool isInteger(const string&);
+
+public:
+    static vector<unique_ptr<Event>> createEventList(std::istream&);
 };

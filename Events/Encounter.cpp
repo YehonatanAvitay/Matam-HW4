@@ -1,6 +1,8 @@
 #include "Encounter.h"
 #include <numeric>
 
+bool Encounter::isEncounter = true;
+
 string Encounter::getDescription() const {
     string description = name + " ( power " + std::to_string(getCombat()) + ", loot " +
                          std::to_string(getLoot()) + ", damage " +
@@ -59,6 +61,10 @@ unsigned int Pack::get(unsigned int (*getter)(const Encounter&),
         sum += getter(*monster);
     }
     return sum;
+}
+
+void Pack::setMembers(vector<unique_ptr<Encounter>> inputMembers){
+    this->members = std::move(inputMembers);
 }
 
 unsigned int Pack::getCombat() const {

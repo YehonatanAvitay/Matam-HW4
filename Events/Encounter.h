@@ -8,7 +8,7 @@ class Encounter : public Event {
     unsigned int combatPower;
     unsigned int loot;
     unsigned int damage;
-    bool isEncounter = true;
+    static bool isEncounter;
 protected:
     Encounter() = default;
 public:

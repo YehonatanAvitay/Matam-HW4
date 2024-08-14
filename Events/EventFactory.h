@@ -11,12 +11,12 @@
 #include <functional>
 
 class EventFactory {
-    static std::unordered_map<string,std::function<unique_ptr<Event>(const vector<string>&)>>
+    static std::unordered_map<string,std::function<unique_ptr<Event>(std::istream&)>>
     eventsFactoriesMap;
-    static vector<string> splitString(const string&);
-    static unique_ptr<Pack> createPackRecursively(std::vector<string>::iterator it);
     static bool isInteger(const string&);
+    static unique_ptr<Event> createEvent(const string& eventName, std::istream& eventFile);
+
 public:
-    static unique_ptr<Pack> createPack(const vector<string>&);
-    vector<unique_ptr<Event>> createEventList(std::istream& Eventsfile);
+    static unique_ptr<Pack> createPack(std::istream&);
+    vector<unique_ptr<Event>> createEventList(std::istream&);
 };

@@ -1,16 +1,13 @@
 #include "EventFactory.h"
 
-std::unordered_map<std::string, std::function<std::unique_ptr<Event>(const vector<string>&)>>
+std::unordered_map<std::string, std::function<std::unique_ptr<Event>(std::istream&)>>
 EventFactory::eventsFactoriesMap = {
-{"Snail", [](const vector<string>&){return std::make_unique<Snail>();}},
-{"Slime", [](const vector<string>&){return std::make_unique<Slime>();}},
-{"Balrog", [](const vector<string>&){return std::make_unique<Balrog>();}},
-{"Pack", [](const vector<string>& string1)
-    {return EventFactory::createPack(string1);}},
-{"SolarEclipse", [](const vector<string>&)
-    {return std::make_unique<SolarEclipse>();}},
-{"PotionsMerchant", [](const vector<string>&)
-    {return std::make_unique<PotionsMerchant>();}},
+{"Snail", [](std::istream&){return std::make_unique<Snail>();}},
+{"Slime", [](std::istream&){return std::make_unique<Slime>();}},
+{"Balrog", [](std::istream&){return std::make_unique<Balrog>();}},
+{"Pack", [](std::istream& file) {return EventFactory::createPack(file);}},
+{"SolarEclipse", [](std::istream&) {return std::make_unique<SolarEclipse>();}},
+{"PotionsMerchant", [](std::istream&) {return std::make_unique<PotionsMerchant>();}},
 };
 
 bool EventFactory::isInteger(const string& string1) {
@@ -22,61 +19,41 @@ bool EventFactory::isInteger(const string& string1) {
     return true;
 }
 
+unique_ptr<Event> EventFactory::createEvent(const string& eventName, std::istream& eventFile) {
+    auto it = eventsFactoriesMap.find(eventName);
+    if (it == eventsFactoriesMap.end()) {
+        throw std::runtime_error("Invalid Events File");
+    }
+    std::unique_ptr<Event> event = it->second(eventFile);
+    return std::move(event);
+}
+
 vector<unique_ptr<Event>> EventFactory::createEventList(std::istream& eventsFile) {
     vector<unique_ptr<Event>> eventsList;
-    string line;
     int counter = 0;
-    while(std::getline(eventsFile, line)) {
-        vector<string> splittedString = splitString(line);
-        // Handeling the case that a number argument comes after the name of the class.
-        // Only the words before the number (which define the Event) will be searched in the map.
-        string stringToCheck;
-        for (string string1 : splittedString) {
-            if(std::isdigit(string1[0])) {
-                break;
-            }
-            stringToCheck += string1;
-        }
-            auto it = eventsFactoriesMap.find(stringToCheck);
-            if (it == eventsFactoriesMap.end()) {
-                throw std::runtime_error("Invalid Events File");
-            }
-            std::unique_ptr<Event> event = it->second(splittedString);
-            eventsList.push_back(std::move(event));
-            counter++;
-        }
+    string eventString;
+    while(eventsFile >> eventString) {
+        eventsList.push_back(std::move(createEvent(eventString ,eventsFile)));
+        counter++;
+    }
     if (counter < 2) {
         throw std::runtime_error("Invalid Events File");
     }
     return eventsList;
     }
 
-vector<string> EventFactory::splitString(const string& string1) {
-    std::istringstream stream(string1);
-    vector<string> vector1;
-    string word;
-    while(stream >> word) {
-        vector1.push_back(word);
+unique_ptr<Pack> EventFactory::createPack(std::istream& eventsFile) {
+    vector<unique_ptr<Event>> members;
+    string packSize;
+    eventsFile >> packSize;
+    if(!isInteger(packSize)) {
+        throw std::runtime_error("Invalid Events File");
     }
-    return std::move(vector1);
-}
-
-unique_ptr<Pack> EventFactory::createPack(const vector<string>& splittedString) {
-    vector<unique_ptr<Encounter>> members;
-    auto it = splittedString.begin();
-    unique_ptr<Pack> pack = std::make_unique<Pack>();
-    
-    pack->setMembers(std::move(members));
-    return pack;
-}
-
-unique_ptr<Pack> EventFactory::createPackRecursively(std::vector<string>::iterator it) {
-    unsigned int size = stoi(*it);
-    it++;
-    unique_ptr<Pack> pack = std::make_unique<Pack>();
-    vector<unique_ptr<Encounter>> members;
-    for (int i = 0; i < size; ++i) {
-        eventsFactoriesMap.find(*it)
-        it++
+    for (int i = 0; i < std::stoi(packSize); ++i) {
+        string eventString;
+        eventsFile >> eventString;
+        unique_ptr<Event> newEvent = createEvent(eventString ,eventsFile);
+        members.push_back();
     }
+    return
 }

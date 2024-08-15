@@ -1,21 +1,21 @@
 
 #include "MatamStory.h"
-#include "PlayersFactory.h"
-#include "EventFactory.h"
+#include "Players/PlayersFactory.h"
+#include "Events/EventFactory.h"
 #include "Utilities.h"
 
 MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) {
     // Open and read events file
-    EventFactory eventsFactory;
+    Factory factory;
 
     //Initiate events vector
-    events = eventsFactory.createEventList(eventsStream);
+    events = factory.createEventList(eventsStream);
 
     // Open and read players file
     PlayersFactory playersFactory;
 
     // Initiate players vector
-    players = playersFactory.readPlayers(playersStream);
+    players = factory.readPlayers(playersStream);
 
     this->m_turnIndex = 1;
 

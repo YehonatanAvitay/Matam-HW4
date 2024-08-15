@@ -14,7 +14,6 @@ void SolarEclipse::play(Player & player) {
         player.setForce(player.getForce() - 1);
         printTurnOutcome(getSolarEclipseMessage(player, -1));
     }
-
 }
 
 void PotionsMerchant::play(Player & player) {

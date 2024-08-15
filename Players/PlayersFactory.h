@@ -7,6 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+#include "../Events/EventFactory.h"
 
 //class Player;
 //class Job;
@@ -19,8 +20,11 @@
 
 class PlayersFactory {
 private:
-    static const std::unordered_map<std::string, std::function<std::unique_ptr<Job>()>> jobFactoriesMap;
-    static const std::unordered_map<std::string, std::function<std::unique_ptr<Character>()>> characterFactoriesMap;
+    static const std::unordered_map<std::string, std::function<std::unique_ptr<Job>()>>
+    jobFactoriesMap;
+
+    static const std::unordered_map<std::string, std::function<std::unique_ptr<Character>()>>
+    characterFactoriesMap;
 
 public:
     static std::vector<std::unique_ptr<Player>> readPlayers(std::istream& input);

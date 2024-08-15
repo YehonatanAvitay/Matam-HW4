@@ -22,9 +22,12 @@
         std::istringstream lineStream(line);
         players.push_back(createPlayer(lineStream));
         playersCounter++;
+        if (playersCounter > 6) {
+            throw std::runtime_error("Invalid Players File");
+        }
     }
 
-    if (playersCounter < 2 || playersCounter > 6) {
+    if (playersCounter < 2) {
         throw std::runtime_error("Invalid Players File");
     }
     return players;

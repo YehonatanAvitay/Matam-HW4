@@ -18,5 +18,4 @@ void SolarEclipse::play(Player & player) {
 
 void PotionsMerchant::play(Player & player) {
     player.getCharacter().buy(player);
-    printTurnOutcome(getPotionsPurchaseMessage(player, ))
 }

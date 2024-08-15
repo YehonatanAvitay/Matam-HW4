@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Player.h"
 
 string Character::getName() const {
     return name;

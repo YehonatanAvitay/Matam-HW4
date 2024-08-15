@@ -17,7 +17,6 @@ MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) 
     // Initiate players vector
     players = playersFactory.readPlayers(playersStream);
 
-
     this->m_turnIndex = 1;
 
 }
@@ -59,16 +58,32 @@ void MatamStory::playRound() {
 }
 
 bool MatamStory::isGameOver() const {
-    /*===== TODO: Implement the game over condition =====*/
-    return false; // Replace this line
-    /*===================================================*/
+
+    // Default: No player is conscious
+    bool atLeastOneAlive = false;
+
+    for (const unique_ptr<Player>& x: players) {
+        if (x->getLevel() == 10) {
+            return true;
+        }
+        if (x->getHealthPoints() > 0) {
+            atLeastOneAlive = true;
+        }
+    }
+
+    // If no player has level 10,
+    // return true only if at least one player is conscious.
+    return atLeastOneAlive;
 }
 
 void MatamStory::play() {
     printStartMessage();
-    /*===== TODO: Print start message entry for each player using "printStartPlayerEntry" =====*/
 
-    /*=========================================================================================*/
+    int index = 1;
+    for (unique_ptr<Player>& x: players) {
+        printStartPlayerEntry(index++, *x);
+    }
+
     printBarrier();
 
     while (!isGameOver()) {
@@ -79,6 +94,30 @@ void MatamStory::play() {
     /*===== TODO: Print either a "winner" message or "no winner" message =====*/
 
     /*========================================================================*/
+    Player* winnerPlayer = nullptr; //(*(players.begin())).get();  // get a raw pointer to first player
+    for (unique_ptr<Player>& x: players) {
+        if (winnerPlayer == nullptr) {  // going over first 10 points conscious player
+            if (x->getLevel() == 10
+                && x->getHealthPoints() > 0) {
+
+                winnerPlayer = x.get();
+            }
+
+        }
+        else {
+            if (*winnerPlayer < *x){
+                winnerPlayer = x.get();
+            }
+        }
+    }
+
+
+    if (winnerPlayer != nullptr) { // There's winner
+        printWinner(*winnerPlayer);
+    }
+    else {
+        printNoWinners();
+    }
 }
 
  Event* MatamStory::getNextEvent() {

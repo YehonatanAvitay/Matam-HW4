@@ -28,21 +28,6 @@ EventFactory::eventsFactoriesMap = {
     },
 };
 
-std::unordered_map<std::string, std::function<std::unique_ptr<Event>(std::istream&)>>::iterator
-EventFactory::findEvent(const string& eventName) {
-    auto it = eventsFactoriesMap.find(eventName);
-    if (it == eventsFactoriesMap.end()) {
-        throw std::runtime_error("Invalid Events File");
-    }
-    return it;
-}
-
-unique_ptr<Event> EventFactory::createEvent(const string& eventName, std::istream& eventFile) {
-    auto it = findEvent(eventName);
-    std::unique_ptr<Event> event = it->second(eventFile);
-    return std::move(event);
-}
-
 std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::istream&)>>
         EventFactory::encountersFactoriesMap = {
         {"Snail", [](std::istream&){
@@ -63,24 +48,6 @@ std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::is
         },
 };
 
-std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::istream&)>>::iterator
-EventFactory::findEncounter(const string& eventName) {
-    auto it = encountersFactoriesMap.find(eventName);
-    if (it == encountersFactoriesMap.end()) {
-        throw std::runtime_error("Invalid Events File");
-    }
-    return it;
-}
-
-unique_ptr<Encounter> EventFactory::createEncounter(const string& eventName,
-                                                    std::istream& eventFile) {
-    auto it = findEncounter(eventName);
-    unique_ptr<Encounter> newEvent = it->second(eventFile);
-    return std::move(newEvent);
-}
-
-
-
 unique_ptr<Pack> EventFactory::createPack(std::istream& eventsFile) {
     unique_ptr<Pack> newPack;
     vector<unique_ptr<Encounter>> members;
@@ -94,12 +61,17 @@ unique_ptr<Pack> EventFactory::createPack(std::istream& eventsFile) {
     if (PackSizeNumber < 2) {
         throw std::runtime_error("Invalid Events File");
     }
+    int membersCounter = 0;
+    string encounterString;
     // constructing the members vector. It may contain Events of Encounter type only:
-    for (int i = 0; i < PackSizeNumber; ++i) {
-        string encounterString;
-        eventsFile >> encounterString;
-        unique_ptr<Encounter> newEvent = createEncounter(encounterString ,eventsFile);
+    for (int i = 0; i < PackSizeNumber && eventsFile >> encounterString; ++i) {
+        unique_ptr<Encounter> newEvent = createEvent<Encounter>
+                (encounterString ,eventsFile,encountersFactoriesMap);
         members.push_back(std::move(newEvent));
+        ++membersCounter;
+    }
+    if (membersCounter < PackSizeNumber) {
+        throw std::runtime_error("Invalid Events File");
     }
     newPack->setMembers(std::move(members));
     return newPack;
@@ -119,7 +91,8 @@ vector<unique_ptr<Event>> EventFactory::createEventList(std::istream& eventsFile
     int counter = 0;
     string eventString;
     while(eventsFile >> eventString) {
-        eventsList.push_back(std::move(createEvent(eventString ,eventsFile)));
+        eventsList.push_back(std::move(createEvent<Event>(eventString ,eventsFile,
+                                                          eventsFactoriesMap)));
         counter++;
     }
     if (counter < 2) {
@@ -127,3 +100,34 @@ vector<unique_ptr<Event>> EventFactory::createEventList(std::istream& eventsFile
     }
     return eventsList;
 }
+
+//std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::istream&)>>::iterator
+//EventFactory::findEncounter(const string& eventName) {
+//    auto it = encountersFactoriesMap.find(eventName);
+//    if (it == encountersFactoriesMap.end()) {
+//        throw std::runtime_error("Invalid Events File");
+//    }
+//    return it;
+//}
+//
+//std::unordered_map<std::string, std::function<std::unique_ptr<Event>(std::istream&)>>::iterator
+//EventFactory::findEvent(const string& eventName) {
+//    auto it = eventsFactoriesMap.find(eventName);
+//    if (it == eventsFactoriesMap.end()) {
+//        throw std::runtime_error("Invalid Events File");
+//    }
+//    return it;
+//}
+
+//unique_ptr<Event> EventFactory::createEvent(const string& eventName, std::istream& eventFile) {
+//    auto it = findEvent(eventName);
+//    std::unique_ptr<Event> event = it->second(eventFile);
+//    return std::move(event);
+//}
+//
+//unique_ptr<Encounter> EventFactory::createEncounter(const string& eventName,
+//                                                    std::istream& eventFile) {
+//    auto it = findEncounter(eventName);
+//    unique_ptr<Encounter> newEvent = it->second(eventFile);
+//    return std::move(newEvent);
+//}

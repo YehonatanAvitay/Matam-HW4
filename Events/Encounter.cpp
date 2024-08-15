@@ -1,4 +1,5 @@
 #include "Encounter.h"
+#include "../Utilities.h"
 #include <numeric>
 
 bool Encounter::isEncounter = true;
@@ -27,16 +28,20 @@ void Encounter::play(Player& player) {
 }
 
 void Encounter::fight(Player& player, const Job& job) {
-    if (getCombat() >= job.getCombat(player.getForce(), player.getLevel())) {
+    if /** player lost **/ (getCombat() >= job.getCombat(player.getForce(),
+                                                         player.getLevel())) {
         int newHealthPoints = player.getHealthPoints() - this->getDamage();
         player.setHealthPoints(newHealthPoints);
+        printTurnOutcome(getEncounterLostMessage(player, getDamage()));
     }
-    else {
+    else /** player won **/ {
         player.setLevel(player.getLevel() + 1);
         player.setCoins(player.getCoins() + this->getLoot());
         if (job.isItCloseFighter()) {
             player.setHealthPoints(player.getHealthPoints() - 10);
         }
+        printTurnOutcome(getEncounterWonMessage(player, getLoot()));
+
     }
     updateCombat();
 }

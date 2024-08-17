@@ -70,8 +70,9 @@ unsigned int Pack::get(unsigned int (*getter)(const Encounter&),
     return sum;
 }
 
-Pack::Pack(vector<unique_ptr<Encounter>>&& members) :
-        Encounter("Pack", 0, 0, 0), members(std::move(members)) {
+Pack::Pack(vector<unique_ptr<Encounter>>&& membersInput) :
+        Encounter("Pack", 0, 0, 0), members(std::move(membersInput)) {
+    size = members.size();
 }
 
 unsigned int Pack::getCombat() const {
@@ -87,6 +88,14 @@ unsigned int Pack::getLoot() const {
 unsigned int Pack::getDamage() const {
     return get([](const Encounter& encounter) {return encounter.getDamage(); },
                members);
+}
+
+string Pack::getDescription() const {
+    string membersSize = std::to_string(this->size);
+    string description = name + " of " + membersSize + " members (power " +
+                         std::to_string(getCombat()) + ", loot " + std::to_string(getLoot()) + ", damage " +
+                         std::to_string(getDamage()) + ")";
+    return description;
 }
 
 Snail::Snail() : Encounter("Snail", 5, 2, 10) {

@@ -1,4 +1,4 @@
-#include "SpecialEvents.h"
+#include "SpecialEvent.h"
 #include "../Utilities.h"
 
 SpecialEvent::SpecialEvent(const string& name) : Event(name) {
@@ -17,8 +17,14 @@ void SolarEclipse::play(Player & player) {
         printTurnOutcome(getSolarEclipseMessage(player, 1));
     }
     else {
-        player.setForce(player.getForce() - 1);
+        int playerForce = player.getForce();
+        if (playerForce < 1) {
+            printTurnOutcome(getSolarEclipseMessage(player, 0));
+        }
+        else {
         printTurnOutcome(getSolarEclipseMessage(player, -1));
+        player.setForce(player.getForce() - 1);
+        }
     }
 }
 

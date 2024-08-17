@@ -50,17 +50,19 @@ void MatamStory::playRound() {
 }
 
 bool MatamStory::isGameOver() const {
-
+    // check if one of the players got to level 10:
     for (const unique_ptr<Player>& player: players) {
         if (player->getLevel() == 10) {
             return true;
         }
+    }
+    // if no player got to level 10, check if there is still someone alive:
+    for (const unique_ptr<Player>& player: players) {
         if (player->isStillPlaying()) {
             return false;
         }
     }
-    // If no player has level 10,
-    // return true only if at least one player is conscious.
+    // if all the players are dead the game is over:
     return true;
 }
 

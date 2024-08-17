@@ -14,7 +14,7 @@ unsigned int RiskTaking::buy(Player & player) const {
     unsigned int coins = player.getCoins();
     unsigned int currentHealthPoints = player.getHealthPoints();
     if (currentHealthPoints < 50 && coins >= 5) {
-        currentHealthPoints += 5;
+        currentHealthPoints += 10;
         coins -= 5;
         player.setHealthPoints(currentHealthPoints);
         player.setCoins(coins);

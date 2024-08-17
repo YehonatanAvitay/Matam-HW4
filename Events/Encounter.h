@@ -10,7 +10,7 @@ protected:
     unsigned int damage;
     Encounter(const string& name, unsigned int combatPower, unsigned int loot, unsigned int damage);
 public:
-    string getDescription() const override;
+    virtual string getDescription() const override;
     virtual unsigned int getCombat() const;
     virtual unsigned int getLoot() const;
     virtual unsigned int getDamage() const;
@@ -44,6 +44,7 @@ public:
 
 class Pack : public Encounter {
     vector<std::unique_ptr<Encounter>> members;
+    int size;
     static unsigned int get(unsigned int (*getter)(const Encounter&),
                             const vector<unique_ptr<Encounter>>& members);
 public:
@@ -54,4 +55,5 @@ public:
     unsigned int getCombat() const override;
     unsigned int getLoot() const override;
     unsigned int getDamage() const override;
+    string getDescription() const override;
 };

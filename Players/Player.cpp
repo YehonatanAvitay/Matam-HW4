@@ -100,6 +100,9 @@ const Character& Player::getCharacter() const {
 }
 
 void Player::setLevel(unsigned int num) {
+    if (num > 10) {
+        num = 10;
+    }
     level = num;
 }
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Event.h"
-#include "SpecialEvents.h"
+#include "SpecialEvent.h"
 #include "Encounter.h"
 #include <sstream>
 #include <iostream>

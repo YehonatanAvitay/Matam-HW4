@@ -72,7 +72,6 @@ Factory::FactoriesMap<Character> const Factory::characterFactoriesMap = {
         }
 };
 
-
 unique_ptr<Pack> Factory::createPack(std::istream& eventsFile, const string& errorMessage) {
     vector<unique_ptr<Encounter>> members;
     string packSize;
@@ -107,6 +106,9 @@ std::unique_ptr<Player> Factory::createPlayer(std::istringstream& lineStream) {
     std::string name, jobName, characterName;
     string errorMessage = "Invalid Players File";
     if (!(lineStream >> name >> jobName >> characterName)) {
+        throw std::runtime_error(errorMessage);
+    }
+    if(name.size() > 15 || name.size() < 3) {
         throw std::runtime_error(errorMessage);
     }
 

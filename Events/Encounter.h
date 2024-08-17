@@ -4,13 +4,11 @@
 using std::vector;
 
 class Encounter : public Event {
-    string name;
+protected:
     unsigned int combatPower;
     unsigned int loot;
     unsigned int damage;
-    static bool isEncounter;
-protected:
-    Encounter() = default;
+    Encounter(const string& name, unsigned int combatPower, unsigned int loot, unsigned int damage);
 public:
     string getDescription() const override;
     virtual unsigned int getCombat() const;
@@ -23,35 +21,35 @@ public:
 };
 
 class Snail : public Encounter {
-    string name = "Snail";
-    unsigned int combatPower = 5;
-    unsigned int loot = 2;
-    unsigned int damage = 10;
+public:
+    Snail();
+    Snail(const Snail&) = delete;
+    Snail& operator=(const Snail&) = delete;
 };
 
 class Slime : public Encounter {
-    string name = "Slime";
-    unsigned int combatPower = 12;
-    unsigned int loot = 5;
-    unsigned int damage = 25;
+public:
+    Slime();
+    Slime(const Slime&) = delete;
+    Slime& operator=(const Slime&) = delete;
 };
 
 class Balrog : public Encounter {
-    string name = "Balrog";
-    unsigned int combatPower = 15;
-    unsigned int loot = 100;
-    unsigned int damage = 9001;
 public:
+    Balrog();
+    Balrog(const Balrog&) = delete;
+    Balrog& operator=(const Balrog&) = delete;
     void updateCombat() override;
 };
 
 class Pack : public Encounter {
-    string name = "Pack";
-    vector<unique_ptr<Encounter>> members;
+    vector<std::unique_ptr<Encounter>> members;
     static unsigned int get(unsigned int (*getter)(const Encounter&),
-                     const vector<unique_ptr<Encounter>>& members);
+                            const vector<unique_ptr<Encounter>>& members);
 public:
-    void setMembers(vector<unique_ptr<Encounter>>);
+    explicit Pack(vector<unique_ptr<Encounter>>&& members);
+    Pack(const Pack&) = delete;
+    Pack& operator=(const Pack&) = delete;
     void updateCombat() override;
     unsigned int getCombat() const override;
     unsigned int getLoot() const override;

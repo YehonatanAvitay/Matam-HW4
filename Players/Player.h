@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <string>
@@ -6,6 +5,8 @@
 #include <memory>
 #include "Job.h"
 #include "Character.h"
+
+class Character;
 
 using std::string;
 using std::unique_ptr;
@@ -15,7 +16,7 @@ class Player {
     unsigned int level;
     unsigned int force;
     unsigned int coins;
-    unsigned int maxHealthPoints;
+    int maxHealthPoints;
     unsigned int currentHealthPoints;
     unique_ptr<Job> job;
     unique_ptr<Character> character;
@@ -24,6 +25,8 @@ class Player {
 public:
     // Constructor:
     Player(string name, unique_ptr<Job> job, unique_ptr<Character> character);
+    Player(const Player&);
+    Player& operator=(const Player&);
 
     // Getters:
     string getDescription() const;
@@ -33,6 +36,7 @@ public:
     int getCoins() const;
     int getMaxHealthPoints() const;
     int getHealthPoints() const;
+    bool isStillPlaying() const;
     const Job& getJob() const;
     const Character& getCharacter() const;
 
@@ -43,5 +47,5 @@ public:
     void setHealthPoints(int);
 
     // Comparison Operator:
-    bool operator<(Player&) const;
+    bool operator<(const Player&) const;
 };

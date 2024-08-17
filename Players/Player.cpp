@@ -1,10 +1,29 @@
 #include "Player.h"
 
 Player::Player(string name, unique_ptr<Job> job, unique_ptr<Character> character) :
-                name(std::move(name)), level(job->getLevel()), force(job->getForce()),
-                coins(job->getCoins()), maxHealthPoints(job->getMaxHealthPoints()),
-                currentHealthPoints(maxHealthPoints), job(std::move(job)),
-                character(std::move(character)) {
+        name(std::move(name)), level(job->getLevel()), force(job->getForce()),
+        coins(job->getCoins()), maxHealthPoints(job->getMaxHealthPoints()),
+        currentHealthPoints(maxHealthPoints), job(std::move(job)),
+        character(std::move(character)) {
+}
+
+Player::Player(const Player& other) : name(other.name), level(other.level), force(other.force),
+                                      coins(other.coins), maxHealthPoints(other.maxHealthPoints),
+                                      currentHealthPoints(other.currentHealthPoints), job(other.job->clone()),
+                                      character(other.character->clone()), isAlive(other.isAlive) {
+}
+
+Player& Player::operator=(const Player& other) {
+    name = other.name;
+    level = other.level;
+    force = other.force;
+    coins = other.coins;
+    maxHealthPoints = other.maxHealthPoints;
+    currentHealthPoints = other.currentHealthPoints;
+    job = other.job->clone();
+    character = other.character->clone();
+    isAlive = other.isAlive;
+    return *this;
 }
 
 /**
@@ -14,8 +33,8 @@ Player::Player(string name, unique_ptr<Job> job, unique_ptr<Character> character
    */
 string Player::getDescription() const {
     string description = name + ", " + job->getName() + " with " +
-            character->getName() + " character (level " + std::to_string(level)
-            + ", force " + std::to_string(force) + ")";
+                         character->getName() + " character (level " + std::to_string(level)
+                         + ", force " + std::to_string(force) + ")";
     return description;
 }
 
@@ -68,6 +87,10 @@ int Player::getHealthPoints() const {
     return currentHealthPoints;
 }
 
+bool Player::isStillPlaying() const {
+    return isAlive;
+}
+
 const Job& Player::getJob() const {
     return *job;
 }
@@ -102,9 +125,9 @@ void Player::setHealthPoints(int num) {
     currentHealthPoints = num;
 }
 
-bool Player::operator<(Player& player) const {
+bool Player::operator<(const Player& player) const {
     if (this->level > player.level) {
-       return true;
+        return true;
     }
     if (this->level == player.level) {
         if (this->coins > player.coins) {

@@ -17,7 +17,6 @@ RiskTaking::RiskTaking(): Character("RiskTaking") {
 // health is low and coins are sufficient.
 // Deducts coins and returns 1 if health is increased, otherwise returns 0.
 unsigned int RiskTaking::buy(Player & player) const {
-unsigned int RiskTaking::buy(Player & player) const {
     unsigned int coins = player.getCoins();
     unsigned int currentHealthPoints = player.getHealthPoints();
     if (currentHealthPoints < 50 && coins >= 5) {

@@ -4,6 +4,7 @@
 #include "Players/Job.h"
 #include "Utilities.h"
 #include <set>
+#include <algorithm>
 
 MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) {
     //Initiate events vector

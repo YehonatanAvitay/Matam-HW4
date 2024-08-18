@@ -20,7 +20,7 @@ class Factory {
 
     template <class T>
     static FactoriesMapConstIterator<T> find(const string& eventName,
-                                              const FactoriesMap<T>& map,
+                                             const FactoriesMap<T>& map,
                                              const string& ErrorMessage);
 
     template <class T>
@@ -48,8 +48,8 @@ public:
 
 template <class T>
 Factory::FactoriesMapConstIterator<T> Factory::find(const string& eventName,
-                                                const FactoriesMap<T>& map,
-                                                const string& errorMessage) {
+                                                    const FactoriesMap<T>& map,
+                                                    const string& errorMessage) {
     auto it = map.find(eventName);
     if (it == map.end()) {
         throw std::runtime_error(errorMessage);
@@ -59,10 +59,10 @@ Factory::FactoriesMapConstIterator<T> Factory::find(const string& eventName,
 
 template <class T>
 unique_ptr<T> Factory::create(const std::string& eventName,
-                                   std::istream& eventFile,
-                                   const FactoriesMap<T>& map,
-                                   const string& errorMessage) {
+                              std::istream& eventFile,
+                              const FactoriesMap<T>& map,
+                              const string& errorMessage) {
     auto it = find<T>(eventName, map, errorMessage);
     std::unique_ptr<T> event = it->second(eventFile, errorMessage);
-    return std::move(event);
+    return event;
 }

@@ -1,80 +1,78 @@
-#include "EventFactory.h"
+#include "Factory.h"
 
 Factory::FactoriesMap<Event> const Factory::eventsFactoriesMap = {
-    {"Snail", [](std::istream&, const string&){
-    return std::make_unique<Snail>();
+        {"Snail", [](std::istream&, const string&){
+            return std::make_unique<Snail>();
         }
-    },
-    {"Slime", [](std::istream&, const string&){
-    return std::make_unique<Slime>();
+        },
+        {"Slime", [](std::istream&, const string&){
+            return std::make_unique<Slime>();
         }
-    },
-    {"Balrog", [](std::istream&, const string&){
-    return std::make_unique<Balrog>();
+        },
+        {"Balrog", [](std::istream&, const string&){
+            return std::make_unique<Balrog>();
         }
-    },
-    {"Pack", [](std::istream& file, const string&) {
-    return createPack(file, "Invalid Events File");
+        },
+        {"Pack", [](std::istream& file, const string&) {
+            return createPack(file, "Invalid Events File");
         }
-    },
-    {"SolarEclipse", [](std::istream&, const string&) {
-    return std::make_unique<SolarEclipse>();
+        },
+        {"SolarEclipse", [](std::istream&, const string&) {
+            return std::make_unique<SolarEclipse>();
         }
-    },
-    {"PotionsMerchant", [](std::istream&, const string&) {
-    return std::make_unique<PotionsMerchant>();
+        },
+        {"PotionsMerchant", [](std::istream&, const string&) {
+            return std::make_unique<PotionsMerchant>();
         }
-    },
+        },
 };
 
 Factory::FactoriesMap<Encounter> const Factory::encountersFactoriesMap = {
         {"Snail", [](std::istream&, const string&){
             return std::make_unique<Snail>();
-            }
+        }
         },
         {"Slime", [](std::istream&, const string&){
             return std::make_unique<Slime>();
-            }
+        }
         },
         {"Balrog", [](std::istream&, const string&){
             return std::make_unique<Balrog>();
-            }
+        }
         },
         {"Pack", [](std::istream& file, const string&) {
             return Factory::createPack(file, "Invalid Events File");
-            }
+        }
         },
 };
 
 Factory::FactoriesMap<Job> const Factory::jobFactoriesMap = {
         {"Warrior", [](std::istream&, const string&){
             return std::make_unique<Warrior>();
-            }
+        }
         },
         {"Archer", [](std::istream&, const string&){
             return std::make_unique<Archer>();
-            }
+        }
         },
         {"Magician", [](std::istream&, const string&){
             return std::make_unique<Magician>();
-            }
+        }
         }
 };
 
 Factory::FactoriesMap<Character> const Factory::characterFactoriesMap = {
         {"RiskTaking", [](std::istream&, const string&) {
             return std::make_unique<RiskTaking>();
-            }
+        }
         },
         {"Responsible", [](std::istream&, const string&) {
             return std::make_unique<Responsible>();
-            }
+        }
         }
 };
 
-
 unique_ptr<Pack> Factory::createPack(std::istream& eventsFile, const string& errorMessage) {
-    unique_ptr<Pack> newPack;
     vector<unique_ptr<Encounter>> members;
     string packSize;
     eventsFile >> packSize;
@@ -82,7 +80,7 @@ unique_ptr<Pack> Factory::createPack(std::istream& eventsFile, const string& err
     if(!isInteger(packSize)) {
         throw std::runtime_error(errorMessage);
     }
-    unsigned int PackSizeNumber = std::stoi(packSize);
+    int PackSizeNumber = std::stoi(packSize);
     if (PackSizeNumber < 2) {
         throw std::runtime_error(errorMessage);
     }
@@ -100,7 +98,7 @@ unique_ptr<Pack> Factory::createPack(std::istream& eventsFile, const string& err
     if (membersCounter < PackSizeNumber) {
         throw std::runtime_error(errorMessage);
     }
-    newPack->setMembers(std::move(members));
+    unique_ptr<Pack> newPack = std::make_unique<Pack>(std::move(members));
     return newPack;
 }
 
@@ -110,6 +108,9 @@ std::unique_ptr<Player> Factory::createPlayer(std::istringstream& lineStream) {
     if (!(lineStream >> name >> jobName >> characterName)) {
         throw std::runtime_error(errorMessage);
     }
+    if(name.size() > 15 || name.size() < 3) {
+        throw std::runtime_error(errorMessage);
+    }
 
     std::string extra;
     if (lineStream >> extra) {
@@ -117,7 +118,7 @@ std::unique_ptr<Player> Factory::createPlayer(std::istringstream& lineStream) {
     }
 
     auto job = create<Job>(jobName, lineStream,
-                                        jobFactoriesMap, errorMessage);
+                           jobFactoriesMap, errorMessage);
     auto character = create<Character>(characterName, lineStream,
                                        characterFactoriesMap, errorMessage);
 
@@ -134,13 +135,13 @@ bool Factory::isInteger(const string& stringInput) {
 }
 
 vector<unique_ptr<Event>> Factory::createEventList(std::istream& eventsFile,
-                                                        const string& errorMessage) {
+                                                   const string& errorMessage) {
     vector<unique_ptr<Event>> eventsList;
     int counter = 0;
     string eventString;
     while(eventsFile >> eventString) {
         eventsList.push_back(std::move(create<Event>(eventString ,eventsFile,
-                                                          eventsFactoriesMap, errorMessage)));
+                                                     eventsFactoriesMap, errorMessage)));
         counter++;
     }
     if (counter < 2) {
@@ -168,34 +169,3 @@ std::vector<std::unique_ptr<Player>> Factory::readPlayers(std::istream& input) {
     }
     return players;
 }
-
-//std::unordered_map<std::string, std::function<std::unique_ptr<Encounter>(std::istream&)>>::iterator
-//EventFactory::findEncounter(const string& eventName) {
-//    auto it = encountersFactoriesMap.find(eventName);
-//    if (it == encountersFactoriesMap.end()) {
-//        throw std::runtime_error("Invalid Events File");
-//    }
-//    return it;
-//}
-//
-//std::unordered_map<std::string, std::function<std::unique_ptr<Event>(std::istream&)>>::iterator
-//EventFactory::findEvent(const string& eventName) {
-//    auto it = eventsFactoriesMap.find(eventName);
-//    if (it == eventsFactoriesMap.end()) {
-//        throw std::runtime_error("Invalid Events File");
-//    }
-//    return it;
-//}
-
-//unique_ptr<Event> EventFactory::createEvent(const string& eventName, std::istream& eventFile) {
-//    auto it = findEvent(eventName);
-//    std::unique_ptr<Event> event = it->second(eventFile);
-//    return std::move(event);
-//}
-//
-//unique_ptr<Encounter> EventFactory::createEncounter(const string& eventName,
-//                                                    std::istream& eventFile) {
-//    auto it = findEncounter(eventName);
-//    unique_ptr<Encounter> newEvent = it->second(eventFile);
-//    return std::move(newEvent);
-//}

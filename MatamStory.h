@@ -1,5 +1,5 @@
-
 #pragma once
+
 
 #include <iostream>
 #include <vector>
@@ -14,8 +14,7 @@ private:
     std::vector<unique_ptr<Player>> players;
     std::vector<unique_ptr<Event>> events;
 
-    Event* getNextEvent();
-
+    Event& getNextEvent();
     unsigned int m_turnIndex;
 
     /**
@@ -40,8 +39,13 @@ private:
      * @return - true if the game is over, false otherwise
     */
     bool isGameOver() const;
+    static bool comparePlayerPointers(const unique_ptr<Player>& player1,
+                                      const unique_ptr<Player>& player2);
+    void printLeaderBoard(const std::vector<unique_ptr<Player>>& playersList) const;
+    void determineWinner();
 
 public:
+
     /**
      * Constructor of MatamStory class
      *

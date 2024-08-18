@@ -1,11 +1,13 @@
 #include "Encounter.h"
 #include "../Utilities.h"
-#include <numeric>
 
-bool Encounter::isEncounter = true;
+Encounter::Encounter(const string& name, unsigned int combatPower, unsigned int loot,
+                     unsigned int damage): Event(name), combatPower(combatPower), loot(loot),
+                                           damage(damage) {
+}
 
 string Encounter::getDescription() const {
-    string description = name + " ( power " + std::to_string(getCombat()) + ", loot " +
+    string description = name + " (power " + std::to_string(getCombat()) + ", loot " +
                          std::to_string(getLoot()) + ", damage " +
                          std::to_string(getDamage()) + ")";
     return description;
@@ -60,7 +62,7 @@ void Pack::updateCombat() {
 };
 
 unsigned int Pack::get(unsigned int (*getter)(const Encounter&),
-                 const vector<unique_ptr<Encounter>>& members) {
+                       const vector<unique_ptr<Encounter>>& members) {
     unsigned int sum = 0;
     for (const unique_ptr<Encounter>& monster : members) {
         sum += getter(*monster);
@@ -68,12 +70,12 @@ unsigned int Pack::get(unsigned int (*getter)(const Encounter&),
     return sum;
 }
 
-void Pack::setMembers(vector<unique_ptr<Encounter>> inputMembers){
-    this->members = std::move(inputMembers);
+Pack::Pack(vector<unique_ptr<Encounter>>&& membersInput) :
+        Encounter("Pack", 0, 0, 0), members(std::move(membersInput)) {
+    size = members.size();
 }
 
 unsigned int Pack::getCombat() const {
-    // std::accumulate
     return get([](const Encounter& encounter) { return encounter.getCombat(); },
                members);
 }
@@ -86,4 +88,21 @@ unsigned int Pack::getLoot() const {
 unsigned int Pack::getDamage() const {
     return get([](const Encounter& encounter) {return encounter.getDamage(); },
                members);
+}
+
+string Pack::getDescription() const {
+    string membersSize = std::to_string(this->size);
+    string description = name + " of " + membersSize + " members (power " +
+                         std::to_string(getCombat()) + ", loot " + std::to_string(getLoot()) + ", damage " +
+                         std::to_string(getDamage()) + ")";
+    return description;
+}
+
+Snail::Snail() : Encounter("Snail", 5, 2, 10) {
+}
+
+Slime::Slime() : Encounter("Slime", 12, 5, 25) {
+}
+
+Balrog::Balrog() : Encounter("Balrog", 15, 100, 9001) {
 }

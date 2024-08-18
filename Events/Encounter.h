@@ -3,6 +3,7 @@
 #include <vector>
 using std::vector;
 
+// Class to represent Monsters that the player can encounter during game:
 class Encounter : public Event {
 protected:
     unsigned int combatPower;
@@ -20,6 +21,7 @@ public:
     virtual ~Encounter() = default;
 };
 
+// Classes for each of the monsters
 class Snail : public Encounter {
 public:
     Snail();

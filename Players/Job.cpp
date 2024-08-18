@@ -1,10 +1,12 @@
 #include "Job.h"
 
+// Job Constructor
 Job::Job(const string& name, unsigned int level, unsigned int force, unsigned int maxHealthPoints,
          unsigned int coins, bool isMagical, bool isCloseFighter) : name(name), level(level),
                                                                     force(force), maxHealthPoints(maxHealthPoints), coins(coins), isMagical(isMagical),
                                                                     isCloseFighter(isCloseFighter) {
 }
+
 
 string Job::getName() const {
     return name;
@@ -34,6 +36,7 @@ bool Job::isItCloseFighter() const {
     return this->isCloseFighter;
 }
 
+// Default implementation of getCombat: Returns sum of force and level.
 unsigned int Job::getCombat(unsigned int force, unsigned int level) const {
     return force + level;
 }
@@ -42,6 +45,7 @@ Warrior::Warrior(): Job("Warrior", 1, 5, 150, 10,
                         false, true) {
 }
 
+// Warrior's implementation of getCombat: Returns double the force plus level.
 unsigned int Warrior::getCombat(unsigned int force, unsigned int level) const {
     return force * 2 + level;
 }

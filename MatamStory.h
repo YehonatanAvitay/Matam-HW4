@@ -3,12 +3,11 @@
 
 #include <iostream>
 #include <vector>
-
 #include "Players/Player.h"
 #include "Events/Event.h"
 
 
-class MatamStory{
+class MatamStory {
 
 private:
     std::vector<unique_ptr<Player>> players;
@@ -43,6 +42,12 @@ private:
                                       const unique_ptr<Player>& player2);
     void printLeaderBoard(const std::vector<unique_ptr<Player>>& playersList) const;
     void determineWinner();
+
+    /*
+     * Class Factory is defined inside the private section of MatamStory in order to make sure
+     * only MatamStory methods can use Factory methods.
+     */
+    class Factory;
 
 public:
 

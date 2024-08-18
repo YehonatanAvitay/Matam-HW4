@@ -2,6 +2,7 @@
 
 #include "Event.h"
 
+// Class to represent special events:
 class SpecialEvent : public Event {
 protected:
     explicit SpecialEvent(const string&);
@@ -13,6 +14,7 @@ public:
     virtual ~SpecialEvent() = default;
 };
 
+// Classes to represent each of the special events:
 class SolarEclipse : public SpecialEvent {
 public:
     SolarEclipse();

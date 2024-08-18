@@ -1,6 +1,7 @@
 #pragma once
 #include "../Players/Player.h"
 
+// Class to represent Events in the game
 class Event {
 protected:
     explicit Event(const string&);
